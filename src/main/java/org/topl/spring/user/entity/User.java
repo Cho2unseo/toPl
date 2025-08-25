@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.topl.spring.common.status.Role;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "`user`")
@@ -31,6 +33,9 @@ public class User {
     @Temporal(TemporalType.DATE)
     private LocalDate birthDate;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserRole> roles;
+
     @Builder
     private User(Long id, String loginId, String password, String name, LocalDate birthDate) {
         this.id = id;
@@ -38,5 +43,6 @@ public class User {
         this.password = password;
         this.name = name;
         this.birthDate = birthDate;
+        this.roles = null;
     }
 }

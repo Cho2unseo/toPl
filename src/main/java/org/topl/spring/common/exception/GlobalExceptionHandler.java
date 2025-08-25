@@ -1,6 +1,7 @@
 package org.topl.spring.common.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,6 +39,15 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         String errorMessage = ex.getMessage();
         errors.put("미처리 예외", errorMessage != null ? errorMessage : "Error");
+
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, errors);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ApiResponse<?> badCredentialsException(BadCredentialsException e) {
+        Map<String, String> errors = new HashMap<>();
+        String errorMessage = e.getMessage();
+        errors.put("로그인 실패", errorMessage);
 
         return ApiResponse.error(HttpStatus.BAD_REQUEST, errors);
     }
