@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.topl.spring.todo.entity.Todo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -50,6 +51,7 @@ public class User {
     }
 
     public void addTodo(Todo todo) {
+        if (todos == null) todos = new ArrayList<>();
         todos.add(todo);
         todo.setUser(this);
     }
