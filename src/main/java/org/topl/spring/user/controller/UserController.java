@@ -2,10 +2,9 @@ package org.topl.spring.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.topl.spring.common.auth.CustomUser;
 import org.topl.spring.common.response.ApiResponse;
 import org.topl.spring.user.dto.UserRequestDto;
 import org.topl.spring.user.service.UserService;
@@ -25,5 +24,11 @@ public class UserController {
     @PostMapping("/login")
     public ApiResponse<?> login(@RequestBody @Valid UserRequestDto.LoginDto request) {
         return ApiResponse.ok(userService.login(request));
+    }
+
+    @GetMapping("")
+    public ApiResponse<?> myInfo() {
+        Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        return ApiResponse.ok(userService.userInfo(userId));
     }
 }

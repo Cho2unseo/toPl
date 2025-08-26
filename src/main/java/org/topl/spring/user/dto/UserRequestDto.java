@@ -41,7 +41,7 @@ public class UserRequestDto {
     public static class LoginDto {
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9_]{5,20}",
-                message = "영문, 숫자, _만을 5~20자리로 사용하세요")
+                message = "영문, 숫자, _만을 5~20자리로 사용하세요.")
         @Size(min = 5, max = 20,
         message = "5~20자 사이로 입력하세요.")
         private String loginId;
@@ -52,6 +52,4 @@ public class UserRequestDto {
         message = "8~20자 사이로 입력하세요.")
         private String password;
     }
-
-
 }

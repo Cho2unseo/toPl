@@ -12,12 +12,11 @@ import org.topl.spring.common.auth.TokenInfo;
 import org.topl.spring.common.exception.InvalidInputException;
 import org.topl.spring.common.status.Role;
 import org.topl.spring.user.dto.UserRequestDto;
+import org.topl.spring.user.dto.UserResponseDto;
 import org.topl.spring.user.entity.User;
 import org.topl.spring.user.entity.UserRole;
 import org.topl.spring.user.repository.UserRepository;
 import org.topl.spring.user.repository.UserRoleRepository;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -56,5 +55,11 @@ public class UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getLoginId(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtTokenProvider.createToken(authentication);
+    }
+
+    public UserResponseDto userInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new InvalidInputException("token", "회원 정보가 존재하지 않습니다."));
+        return new UserResponseDto(user);
     }
 }
