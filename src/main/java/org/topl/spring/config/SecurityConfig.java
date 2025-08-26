@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/signup", "/api/auth/login").anonymous()
                         .requestMatchers("/api/auth/**").hasRole("USER")
+                        .requestMatchers("/api/todo/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(
