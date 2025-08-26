@@ -27,7 +27,7 @@ public class TodoController {
             todoService.createTodo(dto, user.getUserId());
             return ResponseEntity.status(HttpStatus.CREATED).body("할 일 등록 성공");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 오류가 발생했습니다.");
         }
     }
 }
