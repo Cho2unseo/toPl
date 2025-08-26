@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.topl.spring.todo.entity.Todo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +36,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserRole> roles;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Todo> todos;
+
     @Builder
     private User(Long id, String loginId, String password, String name, LocalDate birthDate) {
         this.id = id;
@@ -43,5 +47,10 @@ public class User {
         this.name = name;
         this.birthDate = birthDate;
         this.roles = null;
+    }
+
+    public void addTodo(Todo todo) {
+        todos.add(todo);
+        todo.setUser(this);
     }
 }

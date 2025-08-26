@@ -14,7 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,15 +70,6 @@ public class JwtTokenProvider {
         CustomUser principal = new CustomUser(userId, username, "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-
-
-
-//        String username = getUsername(token);
-//        String role = Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build()
-//                .parseClaimsJws(token).getBody().get("auth", String.class);
-//
-//        List<SimpleGrantedAuthority>authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
-//        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 
     public boolean validateAccessToken(String token) {
