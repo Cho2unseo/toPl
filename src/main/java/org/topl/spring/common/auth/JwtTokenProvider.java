@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -50,12 +51,35 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        String username = getUsername(token);
-        String role = Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build()
-                .parseClaimsJws(token).getBody().get("role", String.class);
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes()).build()
+                .parseClaimsJws(token).getBody();
 
-        List<SimpleGrantedAuthority>authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
-        return new UsernamePasswordAuthenticationToken(username, "", authorities);
+        String auth = claims.get("auth", String.class);
+        if (auth == null) {
+            throw new JwtException("권한 정보가 없는 토큰입니다.");
+        }
+
+        List<SimpleGrantedAuthority> authorities =
+                Arrays.stream(auth.split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+        String username = claims.getSubject();
+        Long userId = claims.get("userId", Long.class);
+
+        CustomUser principal = new CustomUser(userId, username, "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+
+
+
+//        String username = getUsername(token);
+//        String role = Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build()
+//                .parseClaimsJws(token).getBody().get("auth", String.class);
+//
+//        List<SimpleGrantedAuthority>authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+//        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 
     public boolean validateAccessToken(String token) {
